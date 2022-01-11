@@ -4,6 +4,7 @@ import com.jwtserver.filter.MyFilter1;
 import com.jwtserver.filter.MyFilter3;
 import com.jwtserver.filter.MyFilter3;
 import com.jwtserver.filter.MyFilter4;
+import com.jwtserver.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -37,6 +38,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 인증이 필요하다면 corsFilter와 같이 시큐리티 핉터에 등록해줘야 한다
                 .formLogin().disable() // form 로그인 사용 하지 않음
                 .httpBasic().disable() // 기본적인 http 로그인 방식을 사용하지 않음
+                // .formLogin().disable() 으로 인해 UsernamePasswordAuthenticationFilter가 동작하지 않으므로
+                // 해당 필터를 상속한 JwtAuthenticationFilter 필터를 등록해준다.
+                .addFilter(new JwtAuthenticationFilter(authenticationManager())) // AuthenticationManager는 WebSecurityConfigurerAdapter가 가지고 있다
                 .authorizeRequests()
                 .antMatchers("/api/v1/user/**")
                 .access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
