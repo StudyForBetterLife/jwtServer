@@ -1,5 +1,6 @@
 package com.jwtserver.config;
 
+import com.jwtserver.filter.MyFilter1;
 import com.jwtserver.filter.MyFilter3;
 import com.jwtserver.filter.MyFilter3;
 import com.jwtserver.filter.MyFilter4;
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.web.filter.CorsFilter;
 
 @Configuration
@@ -23,8 +25,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // 시큐리티 필터 체인 중 BasicAuthenticationFilter 전에 MyFilter3을 동작시킨다.
         // 시큐리티 필터 체인을 알아보고 동작 순서를 지정해보자
-        http.addFilterBefore(new MyFilter3(), BasicAuthenticationFilter.class);
-        http.addFilterAfter(new MyFilter4(), BasicAuthenticationFilter.class);
+        http.addFilterBefore(new MyFilter3(), SecurityContextPersistenceFilter.class);
+        http.addFilterAfter(new MyFilter4(), SecurityContextPersistenceFilter.class);
 
         http.csrf().disable();
         http.sessionManagement()
