@@ -8,7 +8,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class PrincipalDetails implements UserDetails {
-    private User user;
+    public User user;
+
+    public User getUser() {
+        return user;
+    }
 
     public PrincipalDetails(User user) {
         this.user = user;
