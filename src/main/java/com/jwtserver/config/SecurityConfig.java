@@ -5,6 +5,8 @@ import com.jwtserver.filter.MyFilter3;
 import com.jwtserver.filter.MyFilter3;
 import com.jwtserver.filter.MyFilter4;
 import com.jwtserver.jwt.JwtAuthenticationFilter;
+import com.jwtserver.jwt.JwtAuthorizationFilter;
+import com.jwtserver.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +25,8 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CorsFilter corsFilter;
+
+    private final UserRepository userRepository;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -48,6 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // .formLogin().disable() 으로 인해 UsernamePasswordAuthenticationFilter가 동작하지 않으므로
                 // 해당 필터를 상속한 JwtAuthenticationFilter 필터를 등록해준다.
                 .addFilter(new JwtAuthenticationFilter(authenticationManager())) // AuthenticationManager는 WebSecurityConfigurerAdapter가 가지고 있다
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository)) // AuthenticationManager는 WebSecurityConfigurerAdapter가 가지고 있다
                 .authorizeRequests()
                 .antMatchers("/api/v1/user/**")
                 .access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")

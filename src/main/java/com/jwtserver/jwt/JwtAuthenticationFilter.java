@@ -83,7 +83,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
 
         // 응답 헤더에 "Authorization: Bearer + jwt 토큰" 으로 jwt 토큰을 클라이언트에게 보낸다
+        // 이제 클라이언트는 서버가 응답한 jwt 토큰을 가지고 요청을 보낸다
+        // 클라이언트가 보낸 jwt 토큰의 유효성 확인을 위한 필터가 필요하다 -> JwtAuthorizationFilter
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);
-        super.successfulAuthentication(request, response, chain, authResult);
     }
 }
